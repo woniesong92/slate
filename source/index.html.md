@@ -19,80 +19,57 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+WorkersAI 는 API를 통해 수작업으로 해야하는 Task를 만들고, 머신러닝을 위한 label 들을 수집할 수 있게 해줍니다.
 
 # Authentication
 
-> To authorize, use this code:
+> Authentication이 필요한 request에 api_key param을 넣어주세요:
 
 ```ruby
-require 'kittn'
+include HTTParty
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+response = HTTParty.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
 ```
 
 ```python
-import kittn
+import requests
 
-api = kittn.authorize('meowmeowmeow')
+response = requests.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
 ```
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+curl "http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj"
 ```
 
 ```javascript
-const kittn = require('kittn');
 
-let api = kittn.authorize('meowmeowmeow');
 ```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+개발중엔 <code>test API key</code> 를 사용해서 mock requests를 만들 수 있습니다.
 </aside>
 
-# Kittens
+# Tasks
 
-## Get All Kittens
+## Get All Tasks
 
 ```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
+response = HTTParty.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
 ```
 
 ```python
-import kittn
+import requests
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
+response = requests.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
 ```
 
 ```shell
-curl "http://example.com/api/kittens"
+curl "http://api.workers.ai/v1/tasks"
   -H "Authorization: meowmeowmeow"
 ```
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+let workers = api.tasks.get();
 ```
 
 > The above command returns JSON structured like this:
@@ -100,76 +77,92 @@ let kittens = api.kittens.get();
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
+    "external_id": "623ed523-d7cf-4007-be3e-2732b3b9c526"
+    "task_type": "categorization",
+    "callback_url": "http://example.com/callback",
+    "instruction": "Is this dog big or small?",
+    "params": {
+      "attachment_type": "image",
+      "attachment": "http://www.dogsarebig.com/dog1.jpg",
+      "categories": ["big", "small"]
+    },
+    "response": {}
+  }
   {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "external_id": "8f611c16-590f-4eb3-84d5-28a67417cad1"
+    "task_type": "categorization",
+    "callback_url": "http://example.com/callback",
+    "instruction": "Is this hotdog or not hotdog?",
+    "params": {
+      "attachment_type": "image",
+      "attachment": "http://www.silliconvalley.com/hotdog.jpg",
+      "categories": ["hotdog", "not hotdog"]
+    },
+    "response": {}
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves all tasks.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET http://api.workers.ai/v1/tasks`
 
 ### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+task_type | false | If set to true, the result will also include cats.
+instruction | true | If set to false, the result will include tasks that have already been adopted.
+params    | {}      | this is a param
+callback_url    | "http://example.com/callback"      | this is a param
+metadata    | {}      | this is a param
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember — You can use WorkersAI API to start collecting labels regardless of business hours.
 </aside>
 
-## Get a Specific Kitten
+## Get a Specific Task
 
 ```ruby
-require 'kittn'
+require 'HTTParty'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
+response = HTTParty.get('http://api.workers.ai.com/v1/tasks/:id?api_key=test_tV4NttbVsN3crLCFonEj')
+
 ```
 
 ```python
-import kittn
+import requests
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
+response = requests.get('http://api.workers.ai.com/v1/tasks/:id?api_key=test_tV4NttbVsN3crLCFonEj')
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2"
+curl "http://api.workers.ai/v1/tasks/2"
   -H "Authorization: meowmeowmeow"
 ```
 
 ```javascript
-const kittn = require('kittn');
+const task = require('task');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+let api = task.authorize('meowmeowmeow');
+let max = api.tasks.get(2);
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "task_type": "categorization",
+  "callback_url": "http://example.com/callback",
+  "instruction": "Is this dog big or small?",
+  "params": {
+    "attachment_type": "image",
+    "attachment": "http://www.dogsarebig.com/dog1.jpg",
+    "categories": ["big", "small"]
+  },
+  "response": {}
 }
 ```
 
@@ -179,11 +172,11 @@ This endpoint retrieves a specific kitten.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://api.workers.ai/v1/tasks/<id>`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+id | The id of the kitten to retrieve
 
