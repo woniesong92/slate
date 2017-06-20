@@ -129,34 +129,32 @@ id | 불러오고 싶은 task의 id
 
 ## Callback Response 
 
-```ruby
-require 'HTTParty'
-
-response = HTTParty.get('http://api.workers.ai.com/v1/tasks/:id?api_key=test_tV4NttbVsN3crLCFonEj')
-print(response)
-
-```
-
-> Callback(i.e. webhook) response 는 다음과 같은 JSON 구조를 가지고 있습니다 (categorization task):
+> Callback <RP></RP>esponse (i.e. webhook) response 는 다음과 같은 JSON 구조를 가지고 있습니다 (categorization task):
 
 ```json
 {
   "task_type": "categorization",
-  "callback_url": "http://example.com/callback",
-  "instruction": "Is this dog big or small?",
+  "task_id": "a6613e60-5bed-4181-9341-2a2f248fa7e8",
   "params": {
-    "attachment_type": "image",
-    "attachment": "http://www.dogsarebig.com/dog1.jpg",
-    "categories": ["big", "small"]
+    "categories": ["dog", "cat"]
   },
-  "response": {}
+  "response": {
+    "category": "dog"
+  }
 }
 ```
 
-Task 에 대한 label 이 수집되면 이전엔 없던 `response` 라는 key 가 Task 에 새로 생깁니다.
+Task 가 완료되면 Task가 생성될때 지정하신 `callback_url` 로 다음과 같은 `webhook` 을 보냅니다.
+이 `webhook` 을 이용해서 polling 을 할 필요 없이 데이터베이스를 실시간으로 업데이트 하실 수 있습니다.
+만약 `callback_url` 에서 `2XX response` 를 주지 않는다면 Workers AI 는 몇 번의 재도전 후 더 이상 `webhook` 을 보내지 않습니다.
 
 ### Response Parameters
 
 Parameter | Description
 --------- | -----------
-id | The id of the kitten to retrieve
+category | 이미지의 label (e.g. `dog`, `cat`)
+
+<aside class="notice">
+  위의 예시는 `categorization` Task 의 <code>response</code> 입니다.
+  `response` 는 Task 의 종류에 따라 다른 구조로 되어있을 수 있습니다.
+</aside>
