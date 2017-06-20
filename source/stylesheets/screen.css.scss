@@ -69,6 +69,7 @@ html, body {
   background-color: $nav-bg;
   font-size: 13px;
   font-weight: bold;
+  box-shadow: 0 1px 3px 0 rgba(12, 0, 51, 0.1);
 
   // language selector for mobile devices
   .lang-selector {
@@ -77,6 +78,14 @@ html, body {
       padding-top: 0.5em;
       padding-bottom: 0.5em;
     }
+  }
+
+  .tocify-logo {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
 
   // This is the logo at the top of the ToC
@@ -173,7 +182,7 @@ html, body {
 
   // This is the currently selected ToC entry
   .tocify-focus {
-    box-shadow: 0px 1px 0px $nav-active-shadow;
+    // box-shadow: 0px 1px 0px $nav-active-shadow;
     background-color: $nav-active-bg;
     color: $nav-active-text;
   }
@@ -187,12 +196,6 @@ html, body {
     .tocify-item>a {
       padding-left: $nav-padding + $nav-indent;
       font-size: 12px;
-    }
-
-    // for embossed look:
-    @include embossed-bg;
-    &>li:last-child {
-      box-shadow: none; // otherwise it'll overflow out of the subheader
     }
   }
 

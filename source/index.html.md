@@ -126,12 +126,12 @@ id | 불러오고 싶은 task의 id
 
 ## Callback Response 
 
-> Callback <RP></RP>esponse (i.e. webhook) response 는 다음과 같은 JSON 구조를 가지고 있습니다 (categorization task):
+> Categorization Task 일 경우 Callback (i.e. webhook) response 는 다음과 같은 JSON 구조를 가지고 있습니다:
 
 ```json
 {
   "task_type": "categorization",
-  "task_id": "a6613e60-5bed-4181-9341-2a2f248fa7e8",
+  "external_id": "a6613e60-5bed-4181-9341-2a2f248fa7e8",
   "params": {
     "categories": ["dog", "cat"]
   },
