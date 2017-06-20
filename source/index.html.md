@@ -1,15 +1,8 @@
 ---
-title: API Reference
+title: WorkersAI API Documentation
 
 language_tabs:
-  - shell
   - ruby
-  - python
-  - javascript
-
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -19,60 +12,36 @@ search: true
 
 # Introduction
 
-WorkersAI 는 API를 통해 수작업으로 해야하는 Task를 만들고, 머신러닝을 위한 label 들을 수집할 수 있게 해줍니다.
+WorkersAI 는 머신러닝을 위한 트레이닝 데이터를 만들때 사람이 해야만 하는 labeling 을 대신 해주는 서비스 입니다.
+유저가 API를 통해서 Labeling Task (e.g. categorization, audio transcription)를 만들기만 하면
+WorkersAI 가 빠른 시간 안에 정확한 label 을 해드립니다. Requester 로 가입할때 받으셨던 test API key를 사용해서
+다양한 Task 들을 지금 만들어보세요.
 
 # Authentication
 
-> Authentication이 필요한 request에 api_key param을 넣어주세요:
+API 를 통해서 Task 를 만들기 위해서는 Authentication 이 필요합니다.
+먼저 Account Dashboard 에 있는 live api_key 또는 test api_key 를 보신 후
+`api_key` param 에 환경에 따라 알맞는 api_key 를 포함시켜주시면 됩니다.
 
 ```ruby
 include HTTParty
 
-response = HTTParty.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
-```
-
-```python
-import requests
-
-response = requests.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
-```
-
-```shell
-curl "http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj"
-```
-
-```javascript
-
+HTTParty.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
 ```
 
 <aside class="notice">
-개발중엔 <code>test API key</code> 를 사용해서 mock requests를 만들 수 있습니다.
+  개발중엔 <code>test API key</code> 를 사용해서 mock requests를 만들 수 있습니다.
 </aside>
 
 # Tasks
 
-## Get All Tasks
+## List of tasks
 
 ```ruby
-response = HTTParty.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
+HTTParty.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
 ```
 
-```python
-import requests
-
-response = requests.get('http://api.workers.ai.com/v1/tasks?api_key=test_tV4NttbVsN3crLCFonEj')
-```
-
-```shell
-curl "http://api.workers.ai/v1/tasks"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-let workers = api.tasks.get();
-```
-
-> The above command returns JSON structured like this:
+> 정상적인 response 는 다음과 같은 JSON 구조를 가지고 있습니다:
 
 ```json
 [
@@ -103,8 +72,6 @@ let workers = api.tasks.get();
 ]
 ```
 
-This endpoint retrieves all tasks.
-
 ### HTTP Request
 
 `GET http://api.workers.ai/v1/tasks`
@@ -113,44 +80,27 @@ This endpoint retrieves all tasks.
 
 Parameter | Default | Description
 --------- | ------- | -----------
-task_type | false | If set to true, the result will also include cats.
-instruction | true | If set to false, the result will include tasks that have already been adopted.
-params    | {}      | this is a param
-callback_url    | "http://example.com/callback"      | this is a param
-metadata    | {}      | this is a param
+task_type | "categorization" | Task 의 종류 (e.g. "categorization, audio_transcription")
+instruction | "" | Worker 에게 보여줄 Task 를 수행하는 방법
+params    | {}      | Task type 마다 다른 필요한 params
+callback_url    | "http://example.com/callback" | Task 가 완료되었을때 이 response를 보낼 endpoint
+metadata    | {}      | Task 에 포함시키고 싶은 추가 정보 (e.g. internal_task_id)
 
 <aside class="success">
-Remember — You can use WorkersAI API to start collecting labels regardless of business hours.
+  지금 바로 API를 이용해서 Task 를 만들어보세요. 처음 5개의 API requests는 공짜입니다.
 </aside>
 
-## Get a Specific Task
+
+## Specific task
 
 ```ruby
 require 'HTTParty'
 
-response = HTTParty.get('http://api.workers.ai.com/v1/tasks/:id?api_key=test_tV4NttbVsN3crLCFonEj')
+HTTParty.get('http://api.workers.ai.com/v1/tasks/:id?api_key=test_tV4NttbVsN3crLCFonEj')
 
 ```
 
-```python
-import requests
-
-response = requests.get('http://api.workers.ai.com/v1/tasks/:id?api_key=test_tV4NttbVsN3crLCFonEj')
-```
-
-```shell
-curl "http://api.workers.ai/v1/tasks/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const task = require('task');
-
-let api = task.authorize('meowmeowmeow');
-let max = api.tasks.get(2);
-```
-
-> The above command returns JSON structured like this:
+> 정상적인 response 는 다음과 같은 JSON 구조를 가지고 있습니다:
 
 ```json
 {
@@ -166,10 +116,6 @@ let max = api.tasks.get(2);
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
 ### HTTP Request
 
 `GET http://api.workers.ai/v1/tasks/<id>`
@@ -178,5 +124,39 @@ This endpoint retrieves a specific kitten.
 
 Parameter | Description
 --------- | -----------
-id | The id of the kitten to retrieve
+id | 불러오고 싶은 task의 id
 
+
+## Callback Response 
+
+```ruby
+require 'HTTParty'
+
+response = HTTParty.get('http://api.workers.ai.com/v1/tasks/:id?api_key=test_tV4NttbVsN3crLCFonEj')
+print(response)
+
+```
+
+> Callback(i.e. webhook) response 는 다음과 같은 JSON 구조를 가지고 있습니다 (categorization task):
+
+```json
+{
+  "task_type": "categorization",
+  "callback_url": "http://example.com/callback",
+  "instruction": "Is this dog big or small?",
+  "params": {
+    "attachment_type": "image",
+    "attachment": "http://www.dogsarebig.com/dog1.jpg",
+    "categories": ["big", "small"]
+  },
+  "response": {}
+}
+```
+
+Task 에 대한 label 이 수집되면 이전엔 없던 `response` 라는 key 가 Task 에 새로 생깁니다.
+
+### Response Parameters
+
+Parameter | Description
+--------- | -----------
+id | The id of the kitten to retrieve
