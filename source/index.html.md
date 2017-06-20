@@ -4,9 +4,6 @@ title: WorkersAI API Documentation
 language_tabs:
   - ruby
 
-includes:
-  - errors
-
 search: true
 ---
 
