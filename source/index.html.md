@@ -81,7 +81,8 @@ task_type | "categorization" | Task 의 종류 (e.g. "categorization, audio_tran
 instruction | "" | Worker 에게 보여줄 Task 를 수행하는 방법
 params    | {}      | Task type 마다 다른 필요한 params
 callback_url    | "http://example.com/callback" | Task 가 완료되었을때 이 response를 보낼 endpoint
-metadata    | {}      | Task 에 포함시키고 싶은 추가 정보 (e.g. internal_task_id)
+metadata  | {}      | Task 에 포함시키고 싶은 추가 정보 (e.g. internal_task_id)
+completed | false   | true 로 설정할 경우 완료된 Task 들만 불러옵니다
 
 <aside class="success">
   지금 바로 API를 이용해서 Task 를 만들어보세요. 처음 5개의 API requests는 공짜입니다.
